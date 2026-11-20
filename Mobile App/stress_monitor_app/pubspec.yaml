@@ -1,0 +1,93 @@
+name: stress_monitor_app
+description: >
+  Companion app for the Wearable Physiological Monitoring System (v4.0).
+  Thesis: Personalized Well-Being Among University Students.
+  Connects via BLE GATT to "StressMonitor" ESP32 device.
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # BLE
+  flutter_blue_plus: ^1.31.0
+  permission_handler: ^11.3.0
+
+  # State management
+  provider: ^6.1.2
+  google_fonts: ^6.2.1  # PHYSIOPAÑO Soft Signal type: Outfit + JetBrains Mono
+
+  # Firebase
+  firebase_core: ^3.8.1
+  firebase_auth: ^5.3.4
+  cloud_firestore: ^5.6.0
+  firebase_database: ^11.1.6
+  google_generative_ai: ^0.4.6
+
+  # Local database (SQLite)
+  sqflite: ^2.3.2
+
+  # Legacy storage (migration bridge)
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Charts
+  fl_chart: ^0.68.0
+
+  # Notifications
+  flutter_local_notifications: ^17.2.4
+
+  # Connectivity
+  connectivity_plus: ^6.1.1
+
+  # Export & sharing
+  path_provider: ^2.1.5
+  share_plus: ^12.0.1
+  intl: ^0.19.0
+
+  # Email (emergency contact fallback)
+  url_launcher: ^6.2.3
+  csv: ^7.2.0
+  sqflite_common_ffi_web: ^1.1.1
+  pdf: ^3.11.3
+  printing: ^5.14.2
+  shared_preferences: ^2.5.4
+  path: ^1.9.1
+  firebase_crashlytics: ^4.3.10
+  firebase_analytics: ^11.6.0
+
+  # On-device ML — full WESAD Random Forest (m2cgen Dart, see rf_model_generated.dart)
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/app_icon.png"
+  adaptive_icon_background: "#E6F5FF"
+  adaptive_icon_foreground: "assets/mascot/calm.png"
+  min_sdk_android: 21
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/mascot/
+
+  # GPU fragment shaders (lib/motion/shaders.dart)
+  shaders:
+    - shaders/aurora.frag
+
+

@@ -1,0 +1,30 @@
+<!-- @dsCard group="Wayfinding" height=260 subtitle="The stepped support ladder" -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&family=Overpass+Mono:wght@600&family=Noto+Kufi+Arabic:wght@400;800&display=swap">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--font-sans)}
+body{padding:var(--space-4)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;gap:var(--space-2);min-height:48px;padding:0 var(--space-5);border-radius:var(--radius-control);font:700 16px/1 var(--font-sans);border:1.5px solid transparent;cursor:pointer;transition:transform 140ms cubic-bezier(.16,1,.3,1)}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--brand);color:var(--on-brand)}
+.btn-secondary{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn-crisis{background:var(--crisis);color:var(--on-crisis)}
+.btn[disabled]{background:var(--surface-sunk);color:var(--ink-muted);border-color:transparent;cursor:not-allowed}
+.cap{font:600 12px/16px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)}
+.data{font-family:var(--font-data);font-weight:600;font-variant-numeric:tabular-nums}
+.dot{display:inline-grid;place-items:center;border-radius:var(--radius-pill);font:800 13px/1 var(--font-sans)}
+.r1{background:var(--route-1);color:var(--on-route)} .r2{background:var(--route-2);color:var(--on-route)} .r3{background:var(--route-3);color:var(--on-route-3)} .r4{background:var(--route-4);color:var(--on-route)} .r5{background:var(--route-5);color:var(--on-route)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+.strip{position:relative;list-style:none;margin:0;padding:var(--space-4) 0 0;display:grid;grid-template-columns:repeat(5,1fr);max-width:760px}
+.strip::before{content:"";position:absolute;left:10%;right:10%;top:calc(var(--space-4) + 21px);height:3px;background:repeating-linear-gradient(90deg,var(--ink-muted) 0 6px,transparent 6px 10px)}
+.strip::after{content:"";position:absolute;left:10%;width:20%;top:calc(var(--space-4) + 21px);height:3px;background:var(--ink)}
+.st{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--space-1);padding:0 var(--space-1)}
+.st .dot{width:44px;height:44px;border:4px solid var(--ground);position:relative;z-index:1}
+.st.next .dot{box-shadow:0 0 0 3px var(--ink)}
+.nm{font:800 13px/16px var(--font-sans);margin-top:var(--space-1)}
+.lb{font:600 14px/18px var(--font-sans)}
+.tag{margin-top:var(--space-1);font:600 12px/16px var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)}
+</style>
+<ol class="strip" aria-label="Support route"><li class="st here"><span class="dot r1" aria-hidden="true"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span><span class="nm">1</span><span class="lb">Self-help</span><span class=tag>You are here</span></li><li class="st next"><span class="dot r2" aria-hidden="true"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="nm">2</span><span class="lb">Community &amp; peer</span><span class=tag>Suggested next stop</span></li><li class="st"><span class="dot r3" aria-hidden="true"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 12 0V4a2 2 0 0 0-2-2h-1"/><path d="M8 15v1a6 6 0 0 0 12 0v-4"/><circle cx="20" cy="10" r="2"/></svg></span><span class="nm">3</span><span class="lb">Primary care</span></li><li class="st"><span class="dot r4" aria-hidden="true"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 13 5.2 3.5a.5.5 0 0 0 .8-.4V7.9a.5.5 0 0 0-.8-.4L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg></span><span class="nm">4</span><span class="lb">Tele-mental health</span></li><li class="st"><span class="dot r5" aria-hidden="true"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6v4"/><path d="M14 8h-4"/><path d="M14 14h-4"/><path d="M14 18h-4"/><path d="M18 12h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/><path d="M18 22V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v18"/></svg></span><span class="nm">5</span><span class="lb">Specialist</span></li></ol>

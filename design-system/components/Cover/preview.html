@@ -1,0 +1,33 @@
+<!-- @dsCard height=300 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800&family=Overpass+Mono:wght@600&family=Noto+Kufi+Arabic:wght@400;800&display=swap">
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:var(--ground)}
+.cv{position:relative;width:960px;height:300px;background:var(--ground);overflow:hidden}
+.cv svg{position:absolute;inset:0}
+.pnl{fill:var(--panel)} .brd{fill:var(--brand)} .r2{fill:var(--route-2)} .r3{fill:var(--route-3)} .r4{fill:var(--route-4)} .sunk{fill:var(--surface-sunk)}
+.rt{fill:none;stroke:var(--on-panel);stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+.stn{stroke:var(--on-panel);stroke-width:4}
+.txt{position:absolute;left:48px;bottom:44px;width:440px}
+.nm{margin:0;font:800 72px/.92 var(--font-sans);letter-spacing:-.02em;color:var(--ink)}
+.tg{margin:16px 0 0;font:400 14px/20px var(--font-sans);color:var(--ink-muted)}
+</style>
+<div class="cv">
+<svg width="960" height="300" viewBox="0 0 960 300" aria-hidden="true">
+<!-- blocks: panel slab 224x300, brand 160x196, route-2 112x104, route-3 96x104, route-4 64x196, surface-sunk 160x104 (space-8/space-7 multiples)
+     arrangement: flush modular grid from x=496 to the right edge, like a sign gantry
+     pattern: literal motif (route) - one 7px route line with five radius-pill stations crossing every block, because the brand is a transit line to support
+     scales: space-4 gutter 16, radius-panel 12 on the slab, radius-pill on stations -->
+<rect class="pnl" x="496" y="0" width="224" height="300" rx="12"/>
+<rect class="brd" x="736" y="0" width="160" height="196" rx="12"/>
+<rect class="r4" x="912" y="0" width="64" height="196" rx="12"/>
+<rect class="r2" x="736" y="212" width="112" height="104" rx="12"/>
+<rect class="r3" x="864" y="212" width="112" height="104" rx="12"/>
+<path class="rt" d="M560 300 V72 h64 a40 40 0 0 1 0 80 h-64"/>
+<path class="rt" d="M664 112 H960"/>
+<circle class="stn brd" cx="664" cy="112" r="14"/>
+<circle class="stn r2" cx="792" cy="112" r="11"/>
+<circle class="stn r3" cx="856" cy="112" r="11"/>
+<circle class="stn r4" cx="944" cy="112" r="11"/>
+</svg>
+<div class="txt"><p class="nm">PHYSIOPAÑO</p><p class="tg">You are here. Here's the next stop.</p></div>
+</div>

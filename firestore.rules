@@ -1,0 +1,148 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+
+    // Care navigators: a custom claim set by an administrator
+    // (admin SDK: setCustomUserClaims(uid, { navigator: true })).
+    function isNavigator() {
+      return signedIn() && request.auth.token.get('navigator', false) == true;
+    }
+
+    // Navigators access consented referrals through their claim.
+    match /users/{uid}/{document=**} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+    }
+
+    // Optional outcome monitoring choices. Individual answers are visible
+    // only to the owner; the server returns aggregates to navigators.
+    match /outcome_demographics/{uid} {
+      function validGroups(groups) {
+        return groups is map
+          && groups.keys().hasOnly(['ageBand', 'gender', 'nationalityGroup', 'language', 'area'])
+          && (!('ageBand' in groups) || groups.ageBand in ['18–24', '25–34', '35–44', '45 and over'])
+          && (!('gender' in groups) || groups.gender in ['Woman', 'Man', 'Another gender'])
+          && (!('nationalityGroup' in groups) || groups.nationalityGroup in ['Emirati', 'Other Gulf nationality', 'Other nationality'])
+          && (!('language' in groups) || groups.language in ['Arabic', 'English', 'Another language'])
+          && (!('area' in groups) || groups.area in ['Abu Dhabi city', 'Al Ain', 'Al Dhafra', 'Other area']);
+      }
+      allow get, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['groups', 'consentedAt'])
+        && request.resource.data.consentedAt == request.time
+        && validGroups(request.resource.data.groups);
+    }
+
+    // ── Referrals: consent-first hand-off to the care console ───────────────
+    // Top-level doc = routing metadata only (pseudonym, station, status,
+    // consent summary). What the person chose to share lives in
+    // referrals/{id}/shared/data and is readable by navigators ONLY while
+    // consent is active.
+    match /referrals/{rid} {
+      function owner() { return signedIn() && resource.data.ownerUid == request.auth.uid; }
+      function changedOnly(keys) {
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+      }
+
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.kind in ['referral', 'urgent']
+        && request.resource.data.station in ['primaryCare', 'teleMH']
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.createdAt >= request.time - duration.value(10, 'm')
+        && request.resource.data.createdAt <= request.time + duration.value(10, 'm')
+        && request.resource.data.consent.withdrawnAt == null
+        && request.resource.data.consent.expiresAt is timestamp
+        && request.resource.data.consent.expiresAt <= request.time + duration.value(90, 'd') + duration.value(1, 'h')
+        && request.resource.data.keys().hasOnly(
+             ['ownerUid', 'pseudonym', 'kind', 'station', 'status', 'createdAt', 'updatedAt', 'consent']);
+
+      allow read: if owner() || isNavigator();
+
+      // The person may only withdraw consent (never re-open it or change routing).
+      // Navigators may act on routing fields, never on consent, and only while
+      // consent is active, except closing a withdrawn referral with an outcome.
+      allow update: if (
+          owner()
+          && changedOnly(['consent', 'updatedAt'])
+          && resource.data.consent.withdrawnAt == null
+          && request.resource.data.consent.withdrawnAt != null
+          && request.resource.data.consent.streams == resource.data.consent.streams
+          && request.resource.data.consent.expiresAt == resource.data.consent.expiresAt
+        ) || (
+          isNavigator()
+          && changedOnly(['status', 'station', 'outcome', 'acceptedAt', 'closedAt', 'updatedAt', 'handledBy', 'firstContactAt', 'adverseEventCount'])
+          && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['acceptedAt'])
+            || (!('acceptedAt' in resource.data) && request.resource.data.status == 'accepted'
+              && request.resource.data.acceptedAt == request.time))
+          && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['firstContactAt'])
+            || (!('firstContactAt' in resource.data) && request.resource.data.firstContactAt == request.time))
+          && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['adverseEventCount'])
+            || (request.resource.data.adverseEventCount is int && request.resource.data.adverseEventCount >= 0
+              && request.resource.data.adverseEventCount <= 999))
+          && request.resource.data.status in ['pending', 'accepted', 'closed']
+          && request.resource.data.station in ['community', 'primaryCare', 'teleMH', 'specialist']
+          && (
+            (resource.data.consent.withdrawnAt == null && resource.data.consent.expiresAt > request.time)
+            || (resource.data.status != 'closed' && request.resource.data.status == 'closed'
+              && changedOnly(['status', 'outcome', 'closedAt', 'updatedAt', 'handledBy']))
+          )
+        );
+
+      allow delete: if false; // records are kept for the audit trail
+
+      match /shared/{docId} {
+        function parent() { return get(/databases/$(database)/documents/referrals/$(rid)).data; }
+        function parentAfter() { return getAfter(/databases/$(database)/documents/referrals/$(rid)).data; }
+
+        function activeConsent(p) {
+          return p.consent.withdrawnAt == null && p.consent.expiresAt > request.time;
+        }
+        function followUpDue(p) {
+          return p.kind == 'referral' && (
+            (p.station == 'primaryCare' && request.time >= p.createdAt + duration.value(72, 'h'))
+            || (p.station == 'teleMH' && request.time >= p.createdAt + duration.value(48, 'h'))
+          );
+        }
+        function validFollowUp() {
+          let f = request.resource.data;
+          return f.keys().hasAll(['receivedSupport', 'helpfulness', 'submittedAt'])
+            && f.keys().hasOnly(['receivedSupport', 'helpfulness', 'submittedAt', 'phq4Total', 'pss4Total'])
+            && f.receivedSupport is bool
+            && ((f.receivedSupport && f.helpfulness in ['yes', 'somewhat', 'no', 'unsure'])
+              || (!f.receivedSupport && f.helpfulness == null))
+            && f.submittedAt == request.time
+            && (!('phq4Total' in f) || (f.phq4Total is int && f.phq4Total >= 0 && f.phq4Total <= 12))
+            && (!('pss4Total' in f) || (f.pss4Total is int && f.pss4Total >= 0 && f.pss4Total <= 16));
+        }
+
+        allow create: if signedIn() && parentAfter().ownerUid == request.auth.uid
+          && activeConsent(parentAfter())
+          && ((docId == 'data' && !exists(/databases/$(database)/documents/referrals/$(rid)))
+            || (docId == 'followUp' && followUpDue(parentAfter()) && validFollowUp()));
+
+        allow read: if signedIn() && (
+          parent().ownerUid == request.auth.uid ||
+          (isNavigator()
+            && parent().consent.withdrawnAt == null
+            && parent().consent.expiresAt > request.time)
+        );
+
+        // Stopping sharing deletes the payload.
+        allow delete: if signedIn() && parent().ownerUid == request.auth.uid
+          && (docId != 'followUp' || parentAfter().consent.withdrawnAt != null);
+        allow update: if false;
+      }
+
+      // Append-only log of every navigator view and decision.
+      match /audit/{aid} {
+        allow create: if isNavigator() && request.resource.data.by == request.auth.uid;
+        allow read: if isNavigator()
+          || (signedIn() && get(/databases/$(database)/documents/referrals/$(rid)).data.ownerUid == request.auth.uid);
+        allow update, delete: if false;
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+/* PHYSIOPAÑO Wayfinding tokens (single source: design-system/tokens.json) */
+@import '../../design-system/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--pp-ground);
+    color: var(--pp-ink);
+    font-family: var(--pp-font);
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: var(--pp-brand);
+    color: var(--pp-on-brand);
+  }
+  :focus-visible {
+    outline: 3px solid var(--pp-focus);
+    outline-offset: 2px;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--pp-surface-sunk);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--pp-line);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--pp-ink-muted);
+  }
+  table, .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Paper type: heavy, tightly tracked headlines; calm muted body. */
+@layer base {
+  h1, h2, h3 {
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    color: var(--pp-ink);
+  }
+  h1 { letter-spacing: -0.045em; line-height: 1.04; }
+  p { color: inherit; }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea {
+    background-color: var(--pp-surface-sunk);
+    box-shadow: var(--pp-shadow-inset);
+    border-radius: var(--pp-r-control);
+  }
+  button { -webkit-tap-highlight-color: transparent; }
+  button:not(:disabled):active { transform: scale(.97); }
+  button { transition: transform .25s var(--pp-spring), box-shadow .25s var(--pp-ease), background-color .2s var(--pp-ease); }
+}
+
+/* Legacy utility names kept so existing markup still works, redrawn as Paper:
+   raised paper instead of glass, no gradient text, glows or decorative grids. */
+@layer utilities {
+  .text-gradient {
+    color: var(--pp-brand);
+  }
+  .glass {
+    background: var(--pp-surface);
+    border: var(--pp-edge);
+    box-shadow: var(--pp-shadow-raised);
+  }
+  .glow-emerald {
+    box-shadow: var(--pp-shadow-raised);
+  }
+  .grid-bg,
+  .dot-bg {
+    background-image: none;
+  }
+  .shimmer-border {
+    position: relative;
+  }
+}

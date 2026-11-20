@@ -1,0 +1,68 @@
+# === Flutter / Dart ===
+Mobile App/stress_monitor_app/build/
+Mobile App/stress_monitor_app/.dart_tool/
+Mobile App/stress_monitor_app/.packages
+Mobile App/stress_monitor_app/.flutter-plugins
+Mobile App/stress_monitor_app/.flutter-plugins-dependencies
+Mobile App/stress_monitor_app/android/.gradle/
+Mobile App/stress_monitor_app/android/local.properties
+Mobile App/stress_monitor_app/android/app/build/
+Mobile App/stress_monitor_app/android/build/
+Mobile App/stress_monitor_app/ios/Pods/
+Mobile App/stress_monitor_app/ios/.symlinks/
+Mobile App/stress_monitor_app/.pub-cache/
+*.iml
+
+# === OS files ===
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# === IDE ===
+.idea/
+.vscode/
+*.code-workspace
+
+# === Misc ===
+*.log
+*.tmp
+
+# === Secrets (never commit real keys) ===
+Mobile App/stress_monitor_app/lib/config/secrets.dart
+admin-web-react/.env
+node_modules/
+
+# Local credentials, data backups, and build output
+/validation/serviceAccountKey.json
+/Train WESAD/backups/
+/admin-web-react/dist/
+
+# Local Firebase settings and research data
+.firebaserc
+.env
+.env.*
+!.env.example
+**/google-services.json
+**/GoogleService-Info.plist
+**/firebase_options.dart
+**/key.properties
+**/serviceAccountKey.json
+*.db
+*.sqlite
+*.sqlite3
+*.jks
+*.keystore
+/Calibration/
+/GSR Calibration/
+/Temp Calibration/
+/Thesis Paper/
+/Thesis Reports/
+/Citation Papers/
+/Train WESAD/
+/validation/
+/output/
+/.claude/
+/.firebase/

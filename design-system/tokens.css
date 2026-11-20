@@ -1,0 +1,109 @@
+/* PHYSIOPAÑO "Paper" tokens. Import once at app root.
+   Visual language: warm paper ground, softly raised surfaces (shadow, not border),
+   near-black ink, one royal-blue accent, tight bold headlines, letter-spaced eyebrows.
+   Each colour exists twice: --pp-<name> (hex, for plain CSS) and --pp-<name>-rgb
+   (space-separated channels, so Tailwind opacity modifiers like bg-brand/10 work).
+   Mirrors lib/theme/physiopano_tokens.dart in the Flutter app. */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap");
+
+:root {
+  --pp-ground: #F4F1EA;       --pp-ground-rgb: 244 241 234;   /* paper */
+  --pp-surface: #F3F0EA;      --pp-surface-rgb: 243 240 234;  /* raised card: same paper, lifted by shadow */
+  --pp-surface-sunk: #EDEEF0; --pp-surface-sunk-rgb: 237 238 240; /* cool info panel / inset field */
+  --pp-panel: #242A32;        --pp-panel-rgb: 36 42 50;       /* the one dark feature card */
+  --pp-on-panel: #F4F1EA;     --pp-on-panel-rgb: 244 241 234;
+  --pp-ink: #242A32;          --pp-ink-rgb: 36 42 50;
+  --pp-ink-muted: #505966;    --pp-ink-muted-rgb: 80 89 102;
+  --pp-ink-quiet: #646D7A;    --pp-ink-quiet-rgb: 100 109 122; /* labels, inactive nav */
+  --pp-line: #E2DED5;         --pp-line-rgb: 226 222 213;
+  --pp-focus: #0758E8;        --pp-focus-rgb: 7 88 232;
+
+  --pp-brand: #0758E8;        --pp-brand-rgb: 7 88 232;
+  --pp-brand-soft: #E3ECFD;   --pp-brand-soft-rgb: 227 236 253;
+  --pp-on-brand: #FFFFFF;     --pp-on-brand-rgb: 255 255 255;
+  --pp-route-1: #2F9D7E;      --pp-route-1-rgb: 47 157 126;   /* self-help */
+  --pp-route-2: #0758E8;      --pp-route-2-rgb: 7 88 232;     /* community & peer */
+  --pp-route-3: #C98A1B;      --pp-route-3-rgb: 201 138 27;   /* primary care, ink text on it */
+  --pp-route-4: #6D5BD0;      --pp-route-4-rgb: 109 91 208;   /* tele-mental health */
+  --pp-route-5: #5B6678;      --pp-route-5-rgb: 91 102 120;   /* specialist */
+  --pp-on-route: #FFFFFF;     --pp-on-route-3: #242A32;
+  --pp-crisis: #D6453A;       --pp-crisis-rgb: 214 69 58;     /* reserved for urgent risk */
+  --pp-on-crisis: #FFFFFF;    --pp-on-crisis-rgb: 255 255 255;
+
+  --pp-font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --pp-font-ar: "Noto Kufi Arabic", "Plus Jakarta Sans", system-ui, sans-serif;
+  --pp-font-data: "JetBrains Mono", ui-monospace, monospace;
+  --pp-tracking-display: -0.04em;
+  --pp-tracking-eyebrow: 0.16em;
+
+  --pp-r-control: 18px;   /* inputs, small tiles */
+  --pp-r-panel: 28px;     /* cards */
+  --pp-r-sheet: 36px;
+  --pp-r-pill: 999px;     /* buttons, chips, nav */
+
+  /* Soft-raised paper: a warm drop shadow plus a white top-left highlight. */
+  --pp-shadow-raised: 0 14px 34px -12px rgba(36,42,50,.16), 0 2px 6px rgba(36,42,50,.05), -4px -4px 12px rgba(255,255,255,.85);
+  --pp-shadow-overlay: 0 24px 60px -16px rgba(36,42,50,.28);
+  --pp-shadow-inset: inset 0 2px 6px rgba(36,42,50,.06), inset 0 -1px 0 rgba(255,255,255,.9);
+  --pp-shadow-brand: 0 12px 24px -8px rgba(7,88,232,.45);
+  --pp-edge: 1.5px solid rgba(255,255,255,.75);   /* hairline highlight on raised paper */
+  --pp-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --pp-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --pp-dash-pending: 6 4;
+  color-scheme: light;
+}
+
+/* Dark: an ink-paper night variant (opt-in via data-theme or OS preference). */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    --pp-ground: #16191E;       --pp-ground-rgb: 22 25 30;
+    --pp-surface: #1D2128;      --pp-surface-rgb: 29 33 40;
+    --pp-surface-sunk: #14171B; --pp-surface-sunk-rgb: 20 23 27;
+    --pp-panel: #0F1216;        --pp-panel-rgb: 15 18 22;
+    --pp-ink: #F1EEE7;          --pp-ink-rgb: 241 238 231;
+    --pp-ink-muted: #A4ABB6;    --pp-ink-muted-rgb: 164 171 182;
+    --pp-ink-quiet: #8A92A0;    --pp-ink-quiet-rgb: 138 146 160;
+    --pp-line: #2B3039;         --pp-line-rgb: 43 48 57;
+    --pp-brand: #4C8DFF;        --pp-brand-rgb: 76 141 255;
+    --pp-brand-soft: #1B2A47;   --pp-brand-soft-rgb: 27 42 71;
+    --pp-shadow-raised: 0 14px 34px -12px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.3);
+    --pp-shadow-inset: inset 0 2px 6px rgba(0,0,0,.35);
+    --pp-edge: 1.5px solid rgba(255,255,255,.05);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --pp-ground: #16191E;       --pp-ground-rgb: 22 25 30;
+  --pp-surface: #1D2128;      --pp-surface-rgb: 29 33 40;
+  --pp-surface-sunk: #14171B; --pp-surface-sunk-rgb: 20 23 27;
+  --pp-panel: #0F1216;        --pp-panel-rgb: 15 18 22;
+  --pp-ink: #F1EEE7;          --pp-ink-rgb: 241 238 231;
+  --pp-ink-muted: #A4ABB6;    --pp-ink-muted-rgb: 164 171 182;
+  --pp-ink-quiet: #8A92A0;    --pp-ink-quiet-rgb: 138 146 160;
+  --pp-line: #2B3039;         --pp-line-rgb: 43 48 57;
+  --pp-brand: #4C8DFF;        --pp-brand-rgb: 76 141 255;
+  --pp-brand-soft: #1B2A47;   --pp-brand-soft-rgb: 27 42 71;
+  --pp-shadow-raised: 0 14px 34px -12px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.3);
+  --pp-shadow-inset: inset 0 2px 6px rgba(0,0,0,.35);
+  --pp-edge: 1.5px solid rgba(255,255,255,.05);
+  color-scheme: dark;
+}
+
+body { background: var(--pp-ground); color: var(--pp-ink); font-family: var(--pp-font); -webkit-font-smoothing: antialiased; }
+:lang(ar), [dir="rtl"] { font-family: var(--pp-font-ar); }
+::selection { background: var(--pp-brand); color: var(--pp-on-brand); }
+:focus-visible { outline: 3px solid var(--pp-focus); outline-offset: 2px; }
+.pp-data { font-family: var(--pp-font-data); font-variant-numeric: tabular-nums; }
+
+/* Shared primitives (usable from plain HTML and React alike). */
+.pp-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: var(--pp-tracking-eyebrow); text-transform: uppercase; color: var(--pp-brand); }
+.pp-display { font-weight: 800; letter-spacing: var(--pp-tracking-display); line-height: 1.04; color: var(--pp-ink); }
+.pp-raised { background: var(--pp-surface); border: var(--pp-edge); box-shadow: var(--pp-shadow-raised); border-radius: var(--pp-r-panel); }
+.pp-inset { background: var(--pp-surface-sunk); box-shadow: var(--pp-shadow-inset); border-radius: var(--pp-r-control); }
+.pp-info { background: var(--pp-surface-sunk); border: var(--pp-edge); border-radius: var(--pp-r-panel); }
+.pp-btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px; padding: 0 1.5rem; border-radius: var(--pp-r-pill); font-weight: 600; transition: transform .25s var(--pp-spring), box-shadow .25s var(--pp-ease); }
+.pp-btn:active { transform: scale(.96); }
+.pp-btn-primary { background: linear-gradient(180deg, #2A72F0 0%, var(--pp-brand) 100%); color: var(--pp-on-brand); box-shadow: var(--pp-shadow-brand); }
+.pp-chip { border-radius: var(--pp-r-pill); padding: .5rem 1rem; background: var(--pp-surface); border: var(--pp-edge); box-shadow: var(--pp-shadow-raised); color: var(--pp-ink-muted); font-weight: 500; }
+.pp-chip[aria-pressed="true"], .pp-chip.is-active { background: var(--pp-brand); color: var(--pp-on-brand); box-shadow: var(--pp-shadow-brand); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
